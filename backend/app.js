@@ -4,8 +4,6 @@ import { getSites, getSite } from './database.js'
 
 const app = express();
 
-let sites = await getSites();
-let numSites = sites.length
 
 // handle http request to get all sites
 app.get("/sites", async (req, res) => {
@@ -38,24 +36,37 @@ function randSite() {
 
 
 
-let knownSite = randSite();
-let guessSite;
 
-app.post('/start', (req, res) => {
+let guessSite;
+let numSites;
+let sites;
+let knownSite;
+
+app.post('/start', async (req, res) => {
+
+  sites = await getSites();
+  numSites = sites.length
+
+  knownSite = randSite();
+  guessSite = randSite();
   
+  res.json({message: 'new game started', known: knownSite, unknown: guessSite});
+  
+});
+
+app.post('/play', (req, res) => {
   if (numSites > 1) {
 
+    knownSite = guessSite;
     guessSite = randSite();
 
-    res.json({ message: 'New game started!', known: knownSite, unknown: guessSite});
-
-    knownSite = guessSite;
+    res.json({ message: 'playing', known: knownSite, unknown: guessSite});
+    
   }
   else {
     res.json({message: "game over"})
   }
-  
-});
+})
 
 
 // app.post('/guess', async (req, res) => {
