@@ -42,7 +42,7 @@ let numSites;
 let sites;
 let knownSite;
 
-app.post('/start', async (req, res) => {
+app.post('/', async (req, res) => {
 
   sites = await getSites();
   numSites = sites.length
@@ -54,7 +54,7 @@ app.post('/start', async (req, res) => {
   
 });
 
-app.post('/play', (req, res) => {
+app.post('/game', (req, res) => {
   if (numSites > 1) {
 
     knownSite = guessSite;
