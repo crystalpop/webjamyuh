@@ -31,5 +31,5 @@ async function creatSite(name, url, emissions) {
     return result
 }
 
-const site = await getSite(1)
-console.log(site)
+// const site = await getSite(1)
+// console.log(site)
