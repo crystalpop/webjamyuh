@@ -1,16 +1,17 @@
 import express from 'express'
 
-
 // import { getSites, getSite } from './database.js'
 
 
 const app = express();
-
-
 // const all_sites = await getSites()
 // console.log(all_sites)
-
-
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+  res.setHeader('Access-Control-Allow-Methods', 'GET'); // Allow GET, POST, OPTIONS requests
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specific headers
+  next();
+})
 const ogSites = [
  { id: 1, name: 'Reddit', url: 'reddit.com', carbon_per_visit: 13.05 },
  {
@@ -208,17 +209,13 @@ function randSite(sites) {
 
 
 
-
-
-
-
 let guessSite;
 let numSites;
 let sites;
 let knownSite;
 
 
-app.get('/', async (req, res) => {
+app.get('/', async (req, res, next) => {
 
 
  sites = ogSites;
@@ -231,15 +228,13 @@ app.get('/', async (req, res) => {
  });
 
 
-app.get('/game', (req, res) => {
+app.get('/game', (req, res, next) => {
  if (numSites > 1) {
-
 
    knownSite = guessSite;
    guessSite = randSite(sites);
 
-
-   res.json({ message: 'playing', known: knownSite, unknown: guessSite});
+  res.json({ message: 'playing', known: knownSite, unknown: guessSite});
   
  }
  else {

@@ -4,22 +4,28 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {useState, useEffect} from 'react';
 
 function Game() {
-  const [data, setData] = useState(null);
+  let [data, setData] = useState('');
 
     const fetchData = async () => {
+      let jsonData = 'hello';
       try {
-        const response = await fetch('http://localhost:8000');
-
-      if (!response.ok) {
-        throw new Error("Crystal messed up.");
+        const response = await fetch('http://localhost:8000/game', {
+          method : "GET",
+          mode: 'cors'
+        });
+        jsonData = await response.json();
+        console.log(jsonData);
+      // console.log(jsonData);
+      // setData(jsonData);
+      if (!response.ok){
+        const crystalError = new Error('ohno');
+        throw crystalError;
       }
-
-      const jsonData = await response.json();
-
-      setData(jsonData);
-      console.log(jsonData);
-    } catch (error) {
+      
+    } catch (crystalError) {
       console.error('Crystal :(');
+    } finally {
+      return jsonData.message + ' ' + jsonData.known.name;
     }
   }
 var [score, setScore] = useState(0);
@@ -45,7 +51,7 @@ var [score, setScore] = useState(0);
   <path d="M36.6146 31.9176C35.2326 28.444 31.4319 28.5195 29.8771 29.841L29.0997 30.5017L28.3223 31.1625C23.2086 29.1991 19.1661 32.2323 17.7841 33.9943C11.012 33.8433 8.62791 39.0915 8.28239 41.7346C6.48571 41.7346 5.34551 43.2449 5 44H57C55.3415 40.0732 49.629 38.5881 46.9801 38.3364C45.0452 32.7483 39.2636 31.7289 36.6146 31.9176Z" fill="#867052"/>
 </svg>
     <p className='score'>Score: {score}</p>
-    <button onClick={()=> fetchData()}></button>
+    <button onClick={async ()=> setData(data = await fetchData())}></button>
     <p>{data}</p>
 </div>
     </body>
